@@ -62,16 +62,15 @@ def getMostCommonWord():
 
 def checkWords(words, string, word_length):
   global next_word_idx
+  str_to_check = string[0:word_length]
   for word in words:
     matching = True
     i = 0
     # start_bench()
-    while i != word_length:
-      if word[i] != string[i + next_word_idx]:
-        matching = False
-        break
-      i += 1
+    if word == str_to_check:
+      matching = True
     # stop_bench()
+
     if matching:
       seeWord(word)
       next_word_idx += len(word)
