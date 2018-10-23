@@ -32,6 +32,16 @@ times_seen = {}
 next_word_idx = 0
 most_common_word = ""
 
+tot_time = .0
+start_time = None
+
+def start_bench():
+  global start_time
+  start_time = time.time() # Start bench
+def stop_bench():
+  global tot_time
+  tot_time += time.time() - start_time # Stop bench
+
 def seeWord(word):
   if word in seen_words:
     times_seen[word] += 1
@@ -50,21 +60,22 @@ def getMostCommonWord():
       most_common_words.append(word)
   return sorted(most_common_words, key=lambda x: x[0])[0]
 
-def checkWords(words, string):
+def checkWords(words, string, word_length):
   global next_word_idx
   for word in words:
     matching = True
-    for i in range(len(word)):
-      print(i + next_word_idx)
-      print(word)
+    i = 0
+    while i < word_length:
+      # start_bench()
       if word[i] != string[i + next_word_idx]:
         matching = False
         break
-
+      # stop_bench()
+      i += 1
     if matching:
       seeWord(word)
       next_word_idx += len(word)
-      break
+      return True
 
 def es3(lista, testo):
   global seen_words
@@ -77,10 +88,10 @@ def es3(lista, testo):
   words_by_char = {}
 
   for word in lista:
-    if len(words_by_char) < len(word):
-      words_by_char[len(word)] = [word]
-    else:
+    try:
       words_by_char[len(word)].append(word)
+    except KeyError:
+      words_by_char[len(word)] = [word]
 
   last_print = 0
   while next_word_idx < len(testo):
@@ -90,9 +101,10 @@ def es3(lista, testo):
       last_print = next_word_idx
     
     for words_key in words_by_char:
-      checkWords(words_by_char[words_key], testo)
+      if checkWords(words_by_char[words_key], testo, words_key):
+        break
 
-  # print("loop time", tot_time)
+  print("\nTot time", tot_time)
 
   for word in seen_words:
     lista.remove(word)
