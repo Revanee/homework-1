@@ -65,13 +65,13 @@ def checkWords(words, string, word_length):
   for word in words:
     matching = True
     i = 0
-    while i < word_length:
-      # start_bench()
+    # start_bench()
+    while i != word_length:
       if word[i] != string[i + next_word_idx]:
         matching = False
         break
-      # stop_bench()
       i += 1
+    # stop_bench()
     if matching:
       seeWord(word)
       next_word_idx += len(word)
@@ -98,6 +98,7 @@ def es3(lista, testo):
     remaining = len(testo) - next_word_idx
     if next_word_idx - last_print > 100000:
       print("remaining", remaining)
+      print("tot time", tot_time)
       last_print = next_word_idx
     
     for words_key in words_by_char:
